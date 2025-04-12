@@ -1,0 +1,68 @@
+/* Styles pour le mode haute visibilité */
+.high-contrast {
+  --text-color: #000000;
+  --background-color: #ffffff;
+  --link-color: #0000ff;
+  --border-color: #000000;
+}
+
+.high-contrast body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.high-contrast a {
+  color: var(--link-color);
+  text-decoration: underline;
+}
+
+.high-contrast button:focus,
+.high-contrast a:focus {
+  outline: 3px solid var(--link-color);
+  outline-offset: 2px;
+}
+
+/* Styles pour les éléments de contrôle */
+.visual-controls {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 50;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles pour les curseurs personnalisés */
+input[type="range"] {
+  height: 2rem;
+  border-radius: 1rem;
+  background-color: #e5e7eb;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background-color: #4f46e5;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+/* Animation pour le focus */
+@keyframes focusAnimation {
+  0% { outline-offset: 2px; }
+  50% { outline-offset: 4px; }
+  100% { outline-offset: 2px; }
+}
+
+.focus-visible {
+  animation: focusAnimation 2s infinite;
+}

@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  body {
+    @apply antialiased text-gray-800 dark:text-gray-200;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: none;
+  }
+
+  /* Améliorer la lisibilité sur mobile */
+  @media (max-width: 768px) {
+    html {
+      font-size: 16px;
+    }
+  }
+
+  /* Désactiver le zoom sur les inputs iOS */
+  @media screen and (max-width: 768px) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-lg transition-all duration-200;
+  }
+
+  /* Styles pour les boutons tactiles */
+  .touch-button {
+    @apply active:scale-95 transition-transform;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Styles pour les cartes sur mobile */
+  .mobile-card {
+    @apply mx-4 p-4 bg-white rounded-xl shadow-md;
+  }
+
+  /* Styles pour les formulaires sur mobile */
+  .mobile-form-group {
+    @apply space-y-2 mb-4;
+  }
+
+  .mobile-input {
+    @apply w-full px-4 py-3 rounded-lg border border-gray-300;
+    @apply focus:ring-2 focus:ring-indigo-500 focus:border-transparent;
+    @apply text-base;
+  }
+
+  /* Navigation mobile */
+  .mobile-nav-item {
+    @apply flex flex-col items-center justify-center p-2;
+    @apply text-gray-600 hover:text-indigo-600;
+  }
+
+  .mobile-nav-item.active {
+    @apply text-indigo-600;
+  }
+
+  /* Styles pour les listes sur mobile */
+  .mobile-list {
+    @apply divide-y divide-gray-200;
+  }
+
+  .mobile-list-item {
+    @apply px-4 py-3 flex items-center justify-between;
+    @apply active:bg-gray-50;
+  }
+
+  /* Layout styles */
+  .main-content {
+    @apply flex-1;
+    min-height: calc(100vh - theme('spacing.16'));
+  }
+
+  .sidebar {
+    @apply fixed top-16 left-0 w-64 h-[calc(100vh-4rem)] bg-white border-r border-gray-200 overflow-y-auto;
+    z-index: 30;
+  }
+
+  .footer {
+    @apply bg-gray-900 text-white mt-auto;
+  }
+}
+
+/* Support des safe areas iOS */
+.pb-safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Styles pour le mode dyslexie */
+.dyslexia-mode {
+  font-family: 'OpenDyslexic', Arial, sans-serif;
+}
+
+/* Styles pour le mode malvoyant */
+.high-contrast {
+  --text-color: #000000;
+  --background-color: #ffffff;
+}
+
+/* Styles pour le mode sombre */
+.dark {
+  --text-color: #ffffff;
+  --background-color: #1a1a1a;
+}

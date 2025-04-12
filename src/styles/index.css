@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-family: arial;
+  --font-size: 16px;
+  --line-spacing: 1.5;
+  --background-color: #f5f5dc;
+}
+
+@layer base {
+  body {
+    @apply antialiased text-gray-800 dark:text-gray-200;
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    line-height: var(--line-spacing);
+    background-color: var(--background-color);
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-lg transition-all duration-200;
+  }
+}
+
+/* Styles pour le mode dyslexie */
+.dyslexia-mode {
+  font-family: 'OpenDyslexic', Arial, sans-serif;
+}
+
+.dyslexia-mode h1,
+.dyslexia-mode h2,
+.dyslexia-mode h3 {
+  margin-bottom: 1.2em;
+}
+
+.dyslexia-mode p {
+  margin-bottom: 1.5em;
+}
+
+/* Amélioration de la lisibilité des liens */
+.dyslexia-mode a {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+/* Styles pour les contrôles de formulaire */
+input[type="range"] {
+  @apply w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  @apply appearance-none w-4 h-4 bg-indigo-600 rounded-full cursor-pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  @apply w-4 h-4 bg-indigo-600 border-0 rounded-full cursor-pointer;
+}
+
+/* Styles pour les boutons de police */
+.font-button {
+  @apply px-4 py-2 rounded-md border transition-colors;
+}
+
+.font-button.active {
+  @apply bg-indigo-600 text-white border-transparent;
+}
+
+.font-button:not(.active) {
+  @apply bg-white text-gray-700 border-gray-300 hover:bg-gray-50;
+}
+
+/* Styles responsifs */
+@media (max-width: 768px) {
+  .container {
+    @apply px-4;
+  }
+
+  .mobile-menu-open {
+    @apply overflow-hidden;
+  }
+}
+
+/* Styles d'accessibilité */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
