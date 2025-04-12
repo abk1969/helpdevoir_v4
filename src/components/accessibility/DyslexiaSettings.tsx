@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAccessibilityStore } from '../../store/accessibilityStore';
+import { useLocalization } from '../../hooks/useLocalization';
 import { Type, Palette, Mic, Volume2, TextQuote } from 'lucide-react';
 import * as Switch from '@radix-ui/react-switch';
 
@@ -10,9 +11,9 @@ const fontOptions = [
 ];
 
 const colorSchemes = [
-  { id: 'cream', name: 'Crème', bg: 'bg-[#f5f5dc]', text: 'text-gray-900' },
-  { id: 'blue', name: 'Bleu clair', bg: 'bg-[#e6f3ff]', text: 'text-gray-900' },
-  { id: 'yellow', name: 'Jaune pâle', bg: 'bg-[#fafad2]', text: 'text-gray-900' }
+  { id: 'cream', nameKey: 'accessibility.colorSchemes.cream', bg: 'bg-[#f5f5dc]', text: 'text-gray-900' },
+  { id: 'blue', nameKey: 'accessibility.colorSchemes.lightBlue', bg: 'bg-[#e6f3ff]', text: 'text-gray-900' },
+  { id: 'yellow', nameKey: 'accessibility.colorSchemes.paleYellow', bg: 'bg-[#fafad2]', text: 'text-gray-900' }
 ];
 
 export default function DyslexiaSettings() {
@@ -26,15 +27,17 @@ export default function DyslexiaSettings() {
     updateSettings
   } = useAccessibilityStore();
 
+  const { t } = useLocalization();
+
   return (
     <div className="space-y-6 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Paramètres d'accessibilité</h2>
+      <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('accessibility.settings')}</h2>
 
       {/* Police de caractères */}
       <div className="space-y-3">
         <label className="flex items-center text-sm font-medium text-gray-700">
           <TextQuote className="w-5 h-5 mr-2" />
-          Police de caractères
+          {t('accessibility.fontFamily')}
         </label>
         <div className="flex gap-2">
           {fontOptions.map((option) => (
@@ -58,7 +61,7 @@ export default function DyslexiaSettings() {
       <div className="space-y-3">
         <label className="flex items-center text-sm font-medium text-gray-700">
           <Type className="w-5 h-5 mr-2" />
-          Taille du texte
+          {t('accessibility.fontSize')}
         </label>
         <input
           type="range"
@@ -78,7 +81,7 @@ export default function DyslexiaSettings() {
       <div className="space-y-3">
         <label className="flex items-center text-sm font-medium text-gray-700">
           <Type className="w-5 h-5 mr-2" />
-          Espacement des lignes
+          {t('accessibility.lineSpacing')}
         </label>
         <input
           type="range"
@@ -95,7 +98,7 @@ export default function DyslexiaSettings() {
       <div className="space-y-3">
         <label className="flex items-center text-sm font-medium text-gray-700">
           <Palette className="w-5 h-5 mr-2" />
-          Schéma de couleurs
+          {t('accessibility.colorScheme')}
         </label>
         <div className="flex gap-3">
           {colorSchemes.map((scheme) => (
@@ -103,12 +106,12 @@ export default function DyslexiaSettings() {
               key={scheme.id}
               onClick={() => updateSettings({ colorScheme: scheme.id })}
               className={`p-4 rounded-lg ${scheme.bg} ${scheme.text} transition-all ${
-                colorScheme === scheme.id 
-                  ? 'ring-2 ring-indigo-600 scale-105' 
+                colorScheme === scheme.id
+                  ? 'ring-2 ring-indigo-600 scale-105'
                   : 'hover:scale-105'
               }`}
             >
-              {scheme.name}
+              {t(scheme.nameKey)}
             </button>
           ))}
         </div>
@@ -118,7 +121,7 @@ export default function DyslexiaSettings() {
       <div className="flex items-center justify-between">
         <label className="flex items-center text-sm font-medium text-gray-700">
           <Volume2 className="w-5 h-5 mr-2" />
-          Synthèse vocale
+          {t('accessibility.textToSpeech')}
         </label>
         <Switch.Root
           checked={textToSpeech}
@@ -127,10 +130,10 @@ export default function DyslexiaSettings() {
             textToSpeech ? 'bg-indigo-600' : 'bg-gray-200'
           }`}
         >
-          <Switch.Thumb 
+          <Switch.Thumb
             className={`block w-4 h-4 bg-white rounded-full transition-transform duration-100 transform ${
               textToSpeech ? 'translate-x-6' : 'translate-x-1'
-            }`} 
+            }`}
           />
         </Switch.Root>
       </div>
@@ -139,7 +142,7 @@ export default function DyslexiaSettings() {
       <div className="flex items-center justify-between">
         <label className="flex items-center text-sm font-medium text-gray-700">
           <Mic className="w-5 h-5 mr-2" />
-          Saisie vocale
+          {t('accessibility.voiceInput')}
         </label>
         <Switch.Root
           checked={voiceInput}
@@ -148,10 +151,10 @@ export default function DyslexiaSettings() {
             voiceInput ? 'bg-indigo-600' : 'bg-gray-200'
           }`}
         >
-          <Switch.Thumb 
+          <Switch.Thumb
             className={`block w-4 h-4 bg-white rounded-full transition-transform duration-100 transform ${
               voiceInput ? 'translate-x-6' : 'translate-x-1'
-            }`} 
+            }`}
           />
         </Switch.Root>
       </div>

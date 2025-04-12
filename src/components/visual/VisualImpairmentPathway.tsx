@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Eye, 
+import { useLocalization } from '../../hooks/useLocalization';
+import { useAccessibilityStore } from '../../store/accessibilityStore';
+import {
+  Eye,
   ZoomIn,
   Volume2,
   Lightbulb,
@@ -14,6 +16,7 @@ import {
   Award,
   Headphones
 } from 'lucide-react';
+import VisuallyImpairedSettings from './VisuallyImpairedSettings';
 import ColorContrastExercise from './exercises/ColorContrastExercise';
 import TextToSpeechReader from './exercises/TextToSpeechReader';
 import GestureControl from './exercises/GestureControl';
@@ -85,8 +88,11 @@ const exerciseModules = [
 export default function VisualImpairmentPathway() {
   const { studentId } = useParams();
   const navigate = useNavigate();
+  const { t } = useLocalization();
+  const { isVisuallyImpaired, toggleVisuallyImpaired } = useAccessibilityStore();
   const [selectedModule, setSelectedModule] = useState<string | null>(null);
   const [showIntro, setShowIntro] = useState(true);
+  const [showSettings, setShowSettings] = useState(false);
   const [fontSize, setFontSize] = useState(16);
   const [contrast, setContrast] = useState(100);
 
@@ -115,8 +121,8 @@ export default function VisualImpairmentPathway() {
     };
   }, [selectedModule]);
 
-  const SelectedExercise = selectedModule 
-    ? exerciseModules.find(m => m.id === selectedModule)?.component 
+  const SelectedExercise = selectedModule
+    ? exerciseModules.find(m => m.id === selectedModule)?.component
     : null;
 
   const announceContent = (text: string) => {
@@ -142,28 +148,35 @@ export default function VisualImpairmentPathway() {
             <button
               onClick={() => setFontSize(prev => Math.min(prev + 2, 24))}
               className="p-3 rounded-lg bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:ring-indigo-500"
-              aria-label="Augmenter la taille du texte"
+              aria-label={t('accessibility.increaseFontSize')}
             >
               <ZoomIn className="h-6 w-6" />
             </button>
             <button
-              onClick={() => announceContent('Page du parcours adapté pour malvoyants')}
+              onClick={() => announceContent(t('accessibility.visuallyImpairedPathwayPage'))}
               className="p-3 rounded-lg bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:ring-indigo-500"
-              aria-label="Lire la page"
+              aria-label={t('accessibility.readPage')}
             >
               <Volume2 className="h-6 w-6" />
+            </button>
+            <button
+              onClick={() => setShowSettings(!showSettings)}
+              className="p-3 rounded-lg bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:ring-indigo-500"
+              aria-label={t('accessibility.settings')}
+            >
+              <Settings className="h-6 w-6" />
             </button>
           </div>
         </div>
 
         <header className="text-center mb-12">
-          <h1 
+          <h1
             className="text-4xl font-bold mb-4"
             style={{ fontSize: `${fontSize}px` }}
           >
             Parcours Adapté - Malvoyants
           </h1>
-          <p 
+          <p
             className="text-xl text-gray-600"
             style={{ fontSize: `${fontSize * 0.75}px` }}
           >
@@ -248,6 +261,26 @@ export default function VisualImpairmentPathway() {
           </div>
         )}
 
+        {showSettings && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="bg-white rounded-xl shadow-lg p-6 mb-8"
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">{t('accessibility.visualSettings')}</h2>
+              <button
+                onClick={() => setShowSettings(false)}
+                className="p-2 rounded-lg hover:bg-gray-100"
+              >
+                {t('common.close')}
+              </button>
+            </div>
+            <VisuallyImpairedSettings />
+          </motion.div>
+        )}
+
         <AnimatePresence mode="wait">
           {selectedModule && SelectedExercise && (
             <motion.div
@@ -256,7 +289,7 @@ export default function VisualImpairmentPathway() {
               exit={{ opacity: 0 }}
               className="bg-white rounded-xl shadow-lg p-6"
             >
-              <SelectedExercise 
+              <SelectedExercise
                 fontSize={fontSize}
                 contrast={contrast}
                 onContrastChange={setContrast}

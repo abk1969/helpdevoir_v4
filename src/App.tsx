@@ -29,6 +29,7 @@ import LocalizationPage from './pages/LocalizationPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 import ThemePage from './pages/ThemePage';
 import ErrorsPage from './pages/ErrorsPage';
+import AccessibilityPage from './pages/AccessibilityPage';
 import { Toaster } from 'react-hot-toast';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
@@ -239,6 +240,16 @@ export default function App() {
             <PrivateRoute>
               <Layout>
                 <ErrorsPage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/accessibility"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <AccessibilityPage />
               </Layout>
             </PrivateRoute>
           }

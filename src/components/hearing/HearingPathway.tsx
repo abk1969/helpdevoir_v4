@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAccessibilityStore } from '../../store/accessibilityStore';
-import { 
-  Ear, 
-  HandMetal, 
-  MessageSquare, 
-  Eye, 
-  Video, 
+import { useLocalization } from '../../hooks/useLocalization';
+import {
+  Ear,
+  HandMetal,
+  MessageSquare,
+  Eye,
+  Video,
   ArrowLeft,
   BookOpen,
   Lightbulb,
-  Award
+  Award,
+  Settings
 } from 'lucide-react';
+import HearingImpairedSettings from './HearingImpairedSettings';
 import { motion } from 'framer-motion';
 import SignLanguageTraining from './exercises/SignLanguageTraining';
 import VisualComprehension from './exercises/VisualComprehension';
@@ -68,32 +71,60 @@ const exerciseModules = [
 export default function HearingPathway() {
   const { studentId } = useParams();
   const navigate = useNavigate();
+  const { t } = useLocalization();
+  const { isHearingImpaired, toggleHearingImpaired } = useAccessibilityStore();
   const [selectedModule, setSelectedModule] = useState<string | null>(null);
   const [showIntro, setShowIntro] = useState(true);
+  const [showSettings, setShowSettings] = useState(false);
 
-  const SelectedExercise = selectedModule 
-    ? exerciseModules.find(m => m.id === selectedModule)?.component 
+  const SelectedExercise = selectedModule
+    ? exerciseModules.find(m => m.id === selectedModule)?.component
     : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <button
-          onClick={() => selectedModule ? setSelectedModule(null) : navigate(`/students/${studentId}`)}
-          className="flex items-center text-gray-600 hover:text-gray-900 mb-6"
-        >
-          <ArrowLeft className="h-5 w-5 mr-2" />
-          {selectedModule ? 'Retour aux exercices' : 'Retour au profil'}
-        </button>
+        <div className="flex justify-between items-center mb-6">
+          <button
+            onClick={() => selectedModule ? setSelectedModule(null) : navigate(`/students/${studentId}`)}
+            className="flex items-center text-gray-600 hover:text-gray-900"
+          >
+            <ArrowLeft className="h-5 w-5 mr-2" />
+            {selectedModule ? t('common.back') : t('common.backToProfile')}
+          </button>
+
+          <button
+            onClick={() => setShowSettings(!showSettings)}
+            className="flex items-center text-gray-600 hover:text-gray-900 p-2 rounded-lg hover:bg-gray-100"
+          >
+            <Settings className="h-5 w-5 mr-2" />
+            {t('accessibility.settings')}
+          </button>
+        </div>
 
         <header className="text-center mb-12">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Parcours Adapté - Malentendants
+            {t('accessibility.hearingImpairedPathway')}
           </h1>
           <p className="text-gray-600">
-            Apprentissage personnalisé avec support visuel et gestuel
+            {t('accessibility.hearingImpairedPathwayDescription')}
           </p>
         </header>
+
+        {showSettings && (
+          <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">{t('accessibility.hearingSettings')}</h2>
+              <button
+                onClick={() => setShowSettings(false)}
+                className="p-2 rounded-lg hover:bg-gray-100"
+              >
+                {t('common.close')}
+              </button>
+            </div>
+            <HearingImpairedSettings />
+          </div>
+        )}
 
         {showIntro && !selectedModule && (
           <motion.div
