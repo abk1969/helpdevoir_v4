@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # Service frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    environment:
+      - VITE_API_URL=http://localhost/api
+    networks:
+      - helpdevoir-network
+    restart: unless-stopped
+
+  # Service API
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./src/api:/app/api
+    environment:
+      - FLASK_ENV=production
+      - FLASK_APP=api/app.py
+      - PYTHONUNBUFFERED=1
+    networks:
+      - helpdevoir-network
+    restart: unless-stopped
+
+networks:
+  helpdevoir-network:
+    driver: bridge
