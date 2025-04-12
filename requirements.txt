@@ -1,13 +1,28 @@
+# API Web
 flask==2.3.3
 flask-cors==4.0.0
+gunicorn==21.2.0
+
+# Traitement d'images et de PDF
 pillow==10.0.0
+pdf2image==1.16.3
+pypdf==3.15.1
+
+# IA et traitement du langage naturel
 numpy==1.25.2
 torch==2.0.1
 transformers==4.32.1
 accelerate==0.22.0
 sentencepiece==0.1.99
+langchain==0.0.285
+
+# Utilitaires
 python-dotenv==1.0.0
 pydantic==2.3.0
-langchain==0.0.285
-pypdf==3.15.1
-pdf2image==1.16.3
+requests==2.31.0
+tqdm==4.66.1
+
+# Pour le développement
+pytest==7.4.0
+black==23.7.0
+flake8==6.1.0

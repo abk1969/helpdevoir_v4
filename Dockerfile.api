@@ -8,13 +8,16 @@ RUN apt-get update && apt-get install -y \
     libpoppler-cpp-dev \
     pkg-config \
     python3-dev \
+    curl \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # Copier les fichiers de dépendances
 COPY requirements.txt .
 
 # Installer les dépendances Python
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Copier le code source de l'API
 COPY src/api/ ./api/

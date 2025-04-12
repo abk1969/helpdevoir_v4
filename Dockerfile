@@ -15,8 +15,8 @@ COPY eslint.config.js ./
 COPY index.html ./
 COPY .env ./
 
-# Installer les dépendances
-RUN npm install
+# Installer les dépendances avec une meilleure gestion des erreurs
+RUN npm install --no-fund --no-audit --loglevel=error || (echo "Erreur lors de l'installation des dépendances" && exit 1)
 
 # Copier le code source
 COPY src/ ./src/

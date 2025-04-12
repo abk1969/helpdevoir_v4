@@ -16,32 +16,39 @@ logger = logging.getLogger(__name__)
 # Initialize M3DOCRAG
 rag = M3DOCRAG(use_flash_attention=False)
 
+@app.route('/api/health', methods=['GET'])
+def health_check():
+    return jsonify({
+        'status': 'healthy',
+        'service': 'helpdevoir-api'
+    })
+
 @app.route('/api/homework/correct', methods=['POST'])
 def correct_homework():
     try:
         if 'file' not in request.files:
             return jsonify({'error': 'No file provided'}), 400
-            
+
         file = request.files['file']
         question = request.form.get('question', '')
         homework_id = request.form.get('homeworkId', '')
-        
+
         if not file.filename:
             return jsonify({'error': 'No file selected'}), 400
-            
+
         # Vérifier le type de fichier
         is_image = file.content_type.startswith('image/')
         is_pdf = file.content_type == 'application/pdf'
-        
+
         if not (is_image or is_pdf):
             return jsonify({'error': 'Invalid file type. Only images and PDF files are accepted'}), 400
-            
+
         # Sauvegarder le fichier temporairement
         with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1]) as tmp:
             try:
                 file.save(tmp.name)
                 logger.info(f'Processing homework {homework_id}')
-                
+
                 # Si c'est une image, la convertir en PDF
                 if is_image:
                     img = Image.open(tmp.name)
@@ -51,10 +58,10 @@ def correct_homework():
                     os.unlink(pdf_path)
                 else:
                     rag.add_document(tmp.name, homework_id)
-                
+
                 rag.build_index()
                 answer = rag.process_query(question)
-                
+
                 return jsonify({
                     'correction': answer,
                     'status': 'success'
@@ -70,7 +77,7 @@ def correct_homework():
                     os.unlink(tmp.name)
                 except Exception as e:
                     logger.error(f'Error deleting temporary file: {str(e)}')
-                
+
     except Exception as e:
         logger.error(f'Error in correction endpoint: {str(e)}')
         return jsonify({
@@ -79,4 +86,5 @@ def correct_homework():
         }), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    # En production, on utilise 0.0.0.0 pour écouter sur toutes les interfaces
+    app.run(debug=False, host='0.0.0.0', port=5000)
